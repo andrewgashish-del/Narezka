@@ -299,6 +299,21 @@ class VideoClipCutter:
         )
         self.timecode_text.pack(fill=tk.BOTH, expand=True)
         
+        # Кнопка вставки из буфера обмена
+        paste_btn_frame = tk.Frame(timecode_frame, bg="#f0f0f0")
+        paste_btn_frame.pack(fill=tk.X, pady=(5, 0))
+        
+        tk.Button(
+            paste_btn_frame,
+            text="📋 Вставить таймкоды из буфера обмена",
+            command=self.paste_timecodes_from_clipboard,
+            font=self.font_normal,
+            bg="#2196F3",
+            fg="white",
+            padx=15,
+            pady=5
+        ).pack(side=tk.LEFT)
+        
         # Пример использования
         example_label = tk.Label(
             timecode_frame,
@@ -430,6 +445,19 @@ class VideoClipCutter:
         )
         self.timecode_text.pack(fill=tk.BOTH, expand=True)
         
+        # Кнопка вставки из буфера обмена
+        paste_btn_frame = ctk.CTkFrame(timecode_frame, fg_color="transparent")
+        paste_btn_frame.pack(fill=tk.X, pady=(5, 0))
+        
+        ctk.CTkButton(
+            paste_btn_frame,
+            text="📋 Вставить таймкоды из буфера обмена",
+            command=self.paste_timecodes_from_clipboard,
+            height=35,
+            fg_color="#2196F3",
+            hover_color="#1976D2"
+        ).pack(side=tk.LEFT)
+        
         # Пример
         ctk.CTkLabel(
             timecode_frame,
@@ -485,6 +513,27 @@ class VideoClipCutter:
                 output_folder = os.path.dirname(filename)
                 self.output_folder_path.set(output_folder)
             self.log_message(f"Выбран файл: {filename}")
+    
+    def paste_timecodes_from_clipboard(self):
+        """Вставляет таймкоды из буфера обмена в текстовое поле."""
+        try:
+            clipboard_content = self.root.clipboard_get()
+            if clipboard_content:
+                # Получаем текущий контент и добавляем новый
+                current_content = self.timecode_text.get("1.0", tk.END).strip()
+                if current_content:
+                    new_content = current_content + "\n" + clipboard_content.strip()
+                else:
+                    new_content = clipboard_content.strip()
+                
+                self.timecode_text.delete("1.0", tk.END)
+                self.timecode_text.insert("1.0", new_content)
+                self.log_message("Таймкоды вставлены из буфера обмена")
+        except tk.TclError:
+            # Буфер обмена пуст или недоступен
+            messagebox.showwarning("Буфер обмена", "Буфер обмена пуст или недоступен")
+        except Exception as e:
+            messagebox.showerror("Ошибка", f"Не удалось вставить таймкоды: {str(e)}")
     
     def select_output_folder(self):
         """Открывает диалог выбора папки сохранения."""
