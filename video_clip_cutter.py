@@ -179,15 +179,39 @@ class VideoClipCutter:
         """Настройка стиля для customtkinter."""
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("blue")
-        self.root.configure(bg="#2b2b2b")
+        self.root.configure(bg="#1a1a2e")
+        
+        # Настройка цветов и шрифтов
+        self.colors = {
+            "bg_primary": "#1a1a2e",
+            "bg_secondary": "#16213e",
+            "bg_card": "#0f3460",
+            "accent": "#e94560",
+            "accent_hover": "#ff6b6b",
+            "success": "#00d9a5",
+            "success_hover": "#00f5c4",
+            "text_primary": "#ffffff",
+            "text_secondary": "#a0a0a0"
+        }
     
     def _setup_tkinter_style(self):
         """Настройка стиля для стандартного tkinter."""
-        self.root.configure(bg="#f0f0f0")
+        self.root.configure(bg="#1a1a2e")
         # Настройка шрифтов
-        self.font_normal = ("Arial", 10)
-        self.font_bold = ("Arial", 11, "bold")
-        self.font_large = ("Arial", 14, "bold")
+        self.font_normal = ("Arial", 11)
+        self.font_bold = ("Arial", 12, "bold")
+        self.font_large = ("Arial", 16, "bold")
+        
+        # Настройка цветов
+        self.colors = {
+            "bg_primary": "#1a1a2e",
+            "bg_secondary": "#16213e",
+            "bg_card": "#0f3460",
+            "accent": "#e94560",
+            "success": "#00d9a5",
+            "text_primary": "#ffffff",
+            "text_secondary": "#a0a0a0"
+        }
     
     def _check_ffmpeg(self):
         """Проверяет наличие ffmpeg в системе."""
@@ -221,87 +245,166 @@ class VideoClipCutter:
     
     def _create_tkinter_widgets(self):
         """Создает виджеты для стандартного tkinter."""
-        # Основной фрейм
-        main_frame = tk.Frame(self.root, bg="#f0f0f0", padx=20, pady=20)
+        # Основной фрейм с темным фоном
+        main_frame = tk.Frame(self.root, bg=self.colors["bg_primary"], padx=20, pady=20)
         main_frame.pack(fill=tk.BOTH, expand=True)
         
-        # Выбор видеофайла
-        file_frame = tk.LabelFrame(main_frame, text="Исходный файл", font=self.font_bold, padx=10, pady=10)
-        file_frame.pack(fill=tk.X, pady=(0, 10))
+        # Заголовок приложения
+        title_label = tk.Label(
+            main_frame,
+            text="🎬 Video Clip Cutter",
+            font=("Arial", 20, "bold"),
+            bg=self.colors["bg_primary"],
+            fg=self.colors["accent"]
+        )
+        title_label.pack(pady=(0, 20))
         
-        tk.Label(file_frame, text="Видеофайл:", font=self.font_normal, bg="#f0f0f0").grid(row=0, column=0, sticky=tk.W)
-        self.video_entry = tk.Entry(file_frame, textvariable=self.video_file_path, font=self.font_normal, width=60)
+        # Выбор видеофайла
+        file_frame = tk.LabelFrame(
+            main_frame, 
+            text="📁 Исходный файл", 
+            font=self.font_bold, 
+            padx=15, 
+            pady=15,
+            bg=self.colors["bg_card"],
+            fg=self.colors["text_primary"]
+        )
+        file_frame.pack(fill=tk.X, pady=(0, 15))
+        
+        tk.Label(file_frame, text="Видеофайл:", font=self.font_normal, bg=self.colors["bg_card"], fg=self.colors["text_primary"]).grid(row=0, column=0, sticky=tk.W)
+        self.video_entry = tk.Entry(file_frame, textvariable=self.video_file_path, font=self.font_normal, width=60, bg="#1a1a2e", fg="#ffffff", insertbackground="#ffffff")
         self.video_entry.grid(row=0, column=1, padx=10, pady=5, sticky=tk.EW)
-        tk.Button(file_frame, text="Выбрать видеофайл", command=self.select_video_file, font=self.font_normal).grid(row=0, column=2, padx=5)
+        tk.Button(
+            file_frame, 
+            text="📂 Выбрать видеофайл", 
+            command=self.select_video_file, 
+            font=self.font_normal,
+            bg=self.colors["accent"],
+            fg="white",
+            activebackground=self.colors["accent_hover"],
+            activeforeground="white",
+            relief=tk.FLAT,
+            padx=15,
+            pady=8
+        ).grid(row=0, column=2, padx=5)
         
         file_frame.columnconfigure(1, weight=1)
         
         # Папка сохранения
-        save_frame = tk.LabelFrame(main_frame, text="Папка сохранения", font=self.font_bold, padx=10, pady=10)
-        save_frame.pack(fill=tk.X, pady=(0, 10))
+        save_frame = tk.LabelFrame(
+            main_frame, 
+            text="📂 Папка сохранения", 
+            font=self.font_bold, 
+            padx=15, 
+            pady=15,
+            bg=self.colors["bg_card"],
+            fg=self.colors["text_primary"]
+        )
+        save_frame.pack(fill=tk.X, pady=(0, 15))
         
-        tk.Label(save_frame, text="Папка:", font=self.font_normal, bg="#f0f0f0").grid(row=0, column=0, sticky=tk.W)
-        self.output_entry = tk.Entry(save_frame, textvariable=self.output_folder_path, font=self.font_normal, width=60)
+        tk.Label(save_frame, text="Папка:", font=self.font_normal, bg=self.colors["bg_card"], fg=self.colors["text_primary"]).grid(row=0, column=0, sticky=tk.W)
+        self.output_entry = tk.Entry(save_frame, textvariable=self.output_folder_path, font=self.font_normal, width=60, bg="#1a1a2e", fg="#ffffff", insertbackground="#ffffff")
         self.output_entry.grid(row=0, column=1, padx=10, pady=5, sticky=tk.EW)
-        tk.Button(save_frame, text="Выбрать папку", command=self.select_output_folder, font=self.font_normal).grid(row=0, column=2, padx=5)
+        tk.Button(
+            save_frame, 
+            text="📁 Выбрать папку", 
+            command=self.select_output_folder, 
+            font=self.font_normal,
+            bg=self.colors["accent"],
+            fg="white",
+            activebackground=self.colors["accent_hover"],
+            activeforeground="white",
+            relief=tk.FLAT,
+            padx=15,
+            pady=8
+        ).grid(row=0, column=2, padx=5)
         
         save_frame.columnconfigure(1, weight=1)
         
         # Настройки нарезки
-        settings_frame = tk.LabelFrame(main_frame, text="Настройки нарезки", font=self.font_bold, padx=10, pady=10)
-        settings_frame.pack(fill=tk.X, pady=(0, 10))
+        settings_frame = tk.LabelFrame(
+            main_frame, 
+            text="⚙️ Настройки нарезки", 
+            font=self.font_bold, 
+            padx=15, 
+            pady=15,
+            bg=self.colors["bg_card"],
+            fg=self.colors["text_primary"]
+        )
+        settings_frame.pack(fill=tk.X, pady=(0, 15))
         
         # Режим нарезки
-        mode_frame = tk.Frame(settings_frame, bg="#f0f0f0")
+        mode_frame = tk.Frame(settings_frame, bg=self.colors["bg_card"])
         mode_frame.pack(fill=tk.X, pady=(0, 10))
         
-        tk.Label(mode_frame, text="Режим:", font=self.font_normal, bg="#f0f0f0").pack(side=tk.LEFT)
+        tk.Label(mode_frame, text="Режим:", font=self.font_normal, bg=self.colors["bg_card"], fg=self.colors["text_primary"]).pack(side=tk.LEFT)
         
         tk.Radiobutton(
             mode_frame, 
-            text="Быстрая (-c copy)", 
+            text="⚡ Быстрая (-c copy)", 
             variable=self.cut_mode, 
             value="fast",
             font=self.font_normal,
-            bg="#f0f0f0",
-            command=self.update_status
+            bg=self.colors["bg_card"],
+            fg=self.colors["text_primary"],
+            selectcolor=self.colors["bg_secondary"],
+            activebackground=self.colors["bg_card"],
+            activeforeground=self.colors["text_primary"]
         ).pack(side=tk.LEFT, padx=10)
         
         tk.Radiobutton(
             mode_frame,
-            text="Точная (перекодирование)",
+            text="🎯 Точная (перекодирование)",
             variable=self.cut_mode,
             value="accurate",
             font=self.font_normal,
-            bg="#f0f0f0",
-            command=self.update_status
+            bg=self.colors["bg_card"],
+            fg=self.colors["text_primary"],
+            selectcolor=self.colors["bg_secondary"],
+            activebackground=self.colors["bg_card"],
+            activeforeground=self.colors["text_primary"]
         ).pack(side=tk.LEFT, padx=10)
         
         # Чекбокс вертикального формата
         self.crop_checkbox = tk.Checkbutton(
             settings_frame,
-            text="Обрезать под вертикальный формат 9:16 (1080x1920)",
+            text="✂️ Обрезать под вертикальный формат 9:16 (1080x1920)",
             variable=self.crop_vertical,
             font=self.font_normal,
-            bg="#f0f0f0"
+            bg=self.colors["bg_card"],
+            fg=self.colors["text_primary"],
+            selectcolor=self.colors["bg_secondary"],
+            activebackground=self.colors["bg_card"],
+            activeforeground=self.colors["text_primary"]
         )
         self.crop_checkbox.pack(anchor=tk.W, pady=(5, 0))
         
         # Поле для таймкодов
-        timecode_frame = tk.LabelFrame(main_frame, text="Таймкоды (формат: 00:01:40 - 00:02:40 | Название)", font=self.font_bold, padx=10, pady=10)
-        timecode_frame.pack(fill=tk.BOTH, expand=True, pady=(0, 10))
+        timecode_frame = tk.LabelFrame(
+            main_frame, 
+            text="📝 Таймкоды (формат: 00:01:40 - 00:02:40 | Название)", 
+            font=self.font_bold, 
+            padx=15, 
+            pady=15,
+            bg=self.colors["bg_card"],
+            fg=self.colors["text_primary"]
+        )
+        timecode_frame.pack(fill=tk.BOTH, expand=True, pady=(0, 15))
         
         self.timecode_text = scrolledtext.ScrolledText(
             timecode_frame, 
-            font=("Consolas", 10),
+            font=("Consolas", 11),
             wrap=tk.WORD,
-            height=15
+            height=15,
+            bg="#1a1a2e",
+            fg="#ffffff",
+            insertbackground="#ffffff"
         )
         self.timecode_text.pack(fill=tk.BOTH, expand=True)
         
         # Кнопка вставки из буфера обмена
-        paste_btn_frame = tk.Frame(timecode_frame, bg="#f0f0f0")
-        paste_btn_frame.pack(fill=tk.X, pady=(5, 0))
+        paste_btn_frame = tk.Frame(timecode_frame, bg=self.colors["bg_card"])
+        paste_btn_frame.pack(fill=tk.X, pady=(10, 0))
         
         tk.Button(
             paste_btn_frame,
@@ -310,110 +413,162 @@ class VideoClipCutter:
             font=self.font_normal,
             bg="#2196F3",
             fg="white",
-            padx=15,
-            pady=5
+            activebackground="#1976D2",
+            activeforeground="white",
+            relief=tk.FLAT,
+            padx=20,
+            pady=10
         ).pack(side=tk.LEFT)
         
         # Пример использования
         example_label = tk.Label(
             timecode_frame,
             text="Пример: 00:01:40 - 00:02:40 | Интересный момент",
-            font=("Arial", 9),
-            fg="gray",
-            bg="#f0f0f0"
+            font=("Arial", 10),
+            fg=self.colors["text_secondary"],
+            bg=self.colors["bg_card"]
         )
-        example_label.pack(anchor=tk.W, pady=(5, 0))
+        example_label.pack(anchor=tk.W, pady=(10, 0))
         
         # Кнопка начала и статус
-        control_frame = tk.Frame(main_frame, bg="#f0f0f0")
+        control_frame = tk.Frame(main_frame, bg=self.colors["bg_primary"])
         control_frame.pack(fill=tk.X, pady=(10, 0))
         
         self.start_button = tk.Button(
             control_frame,
-            text="▶ Начать нарезку",
+            text="▶ НАЧАТЬ НАРЕЗКУ",
             command=self.start_cutting,
             font=self.font_large,
-            bg="#4CAF50",
+            bg=self.colors["success"],
             fg="white",
-            padx=20,
-            pady=10
+            activebackground=self.colors["success_hover"],
+            activeforeground="white",
+            relief=tk.FLAT,
+            padx=30,
+            pady=15
         )
         self.start_button.pack(side=tk.LEFT)
         
         # Строка статуса
-        status_frame = tk.LabelFrame(main_frame, text="Статус", font=self.font_bold, padx=10, pady=10)
+        status_frame = tk.LabelFrame(
+            main_frame, 
+            text="📊 Лог процесса", 
+            font=self.font_bold, 
+            padx=15, 
+            pady=15,
+            bg=self.colors["bg_card"],
+            fg=self.colors["text_primary"]
+        )
         status_frame.pack(fill=tk.BOTH, expand=True, pady=(10, 0))
         
         self.status_text = scrolledtext.ScrolledText(
             status_frame,
-            font=("Consolas", 9),
+            font=("Consolas", 10),
             wrap=tk.WORD,
             height=8,
-            state=tk.DISABLED
+            state=tk.DISABLED,
+            bg="#1a1a2e",
+            fg="#00ff00",
+            insertbackground="#00ff00"
         )
         self.status_text.pack(fill=tk.BOTH, expand=True)
     
     def _create_customtkinter_widgets(self):
         """Создает виджеты для customtkinter."""
+        # Заголовок приложения
+        title_label = ctk.CTkLabel(
+            self.root,
+            text="🎬 Video Clip Cutter",
+            font=ctk.CTkFont(size=24, weight="bold"),
+            text_color=self.colors["accent"]
+        )
+        title_label.pack(pady=(15, 10))
+        
         # Скроллруемый фрейм для контента
-        scrollable_frame = ctk.CTkScrollableFrame(self.root)
-        scrollable_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
+        scrollable_frame = ctk.CTkScrollableFrame(self.root, fg_color=self.colors["bg_secondary"])
+        scrollable_frame.pack(fill=tk.BOTH, expand=True, padx=25, pady=15)
         
         # Выбор видеофайла
-        file_frame = ctk.CTkFrame(scrollable_frame)
-        file_frame.pack(fill=tk.X, pady=(0, 10))
+        file_frame = ctk.CTkFrame(scrollable_frame, fg_color=self.colors["bg_card"])
+        file_frame.pack(fill=tk.X, pady=(0, 15))
         
-        ctk.CTkLabel(file_frame, text="Исходный видеофайл:", font=ctk.CTkFont(size=14, weight="bold")).pack(anchor=tk.W, pady=(10, 5))
+        ctk.CTkLabel(file_frame, text="📁 Исходный видеофайл:", font=ctk.CTkFont(size=14, weight="bold"), text_color=self.colors["text_primary"]).pack(anchor=tk.W, pady=(15, 10))
         
         file_select_frame = ctk.CTkFrame(file_frame, fg_color="transparent")
-        file_select_frame.pack(fill=tk.X)
+        file_select_frame.pack(fill=tk.X, padx=15, pady=(0, 15))
         
-        self.video_entry = ctk.CTkEntry(file_select_frame, textvariable=self.video_file_path, placeholder_text="Выберите видеофайл...", height=40)
+        self.video_entry = ctk.CTkEntry(
+            file_select_frame, 
+            textvariable=self.video_file_path, 
+            placeholder_text="Выберите видеофайл...", 
+            height=45,
+            fg_color="#1a1a2e",
+            border_color=self.colors["accent"],
+            text_color=self.colors["text_primary"]
+        )
         self.video_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 10))
         
         ctk.CTkButton(
             file_select_frame,
-            text="📁 Выбрать видеофайл",
+            text="📂 Выбрать видеофайл",
             command=self.select_video_file,
-            height=40
+            height=45,
+            fg_color=self.colors["accent"],
+            hover_color=self.colors["accent_hover"],
+            font=ctk.CTkFont(size=12)
         ).pack(side=tk.RIGHT)
         
         # Папка сохранения
-        save_frame = ctk.CTkFrame(scrollable_frame)
-        save_frame.pack(fill=tk.X, pady=(0, 10))
+        save_frame = ctk.CTkFrame(scrollable_frame, fg_color=self.colors["bg_card"])
+        save_frame.pack(fill=tk.X, pady=(0, 15))
         
-        ctk.CTkLabel(save_frame, text="Папка сохранения:", font=ctk.CTkFont(size=14, weight="bold")).pack(anchor=tk.W, pady=(10, 5))
+        ctk.CTkLabel(save_frame, text="📂 Папка сохранения:", font=ctk.CTkFont(size=14, weight="bold"), text_color=self.colors["text_primary"]).pack(anchor=tk.W, pady=(15, 10))
         
         save_select_frame = ctk.CTkFrame(save_frame, fg_color="transparent")
-        save_select_frame.pack(fill=tk.X)
+        save_select_frame.pack(fill=tk.X, padx=15, pady=(0, 15))
         
-        self.output_entry = ctk.CTkEntry(save_select_frame, textvariable=self.output_folder_path, placeholder_text="По умолчанию - папка с видео", height=40)
+        self.output_entry = ctk.CTkEntry(
+            save_select_frame, 
+            textvariable=self.output_folder_path, 
+            placeholder_text="По умолчанию - папка с видео", 
+            height=45,
+            fg_color="#1a1a2e",
+            border_color=self.colors["accent"],
+            text_color=self.colors["text_primary"]
+        )
         self.output_entry.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 10))
         
         ctk.CTkButton(
             save_select_frame,
-            text="📂 Выбрать папку",
+            text="📁 Выбрать папку",
             command=self.select_output_folder,
-            height=40
+            height=45,
+            fg_color=self.colors["accent"],
+            hover_color=self.colors["accent_hover"],
+            font=ctk.CTkFont(size=12)
         ).pack(side=tk.RIGHT)
         
         # Настройки нарезки
-        settings_frame = ctk.CTkFrame(scrollable_frame)
-        settings_frame.pack(fill=tk.X, pady=(0, 10))
+        settings_frame = ctk.CTkFrame(scrollable_frame, fg_color=self.colors["bg_card"])
+        settings_frame.pack(fill=tk.X, pady=(0, 15))
         
-        ctk.CTkLabel(settings_frame, text="Настройки нарезки:", font=ctk.CTkFont(size=14, weight="bold")).pack(anchor=tk.W, pady=(10, 5))
+        ctk.CTkLabel(settings_frame, text="⚙️ Настройки нарезки:", font=ctk.CTkFont(size=14, weight="bold"), text_color=self.colors["text_primary"]).pack(anchor=tk.W, pady=(15, 10))
         
         # Режим нарезки
         mode_frame = ctk.CTkFrame(settings_frame, fg_color="transparent")
-        mode_frame.pack(fill=tk.X, pady=(5, 10))
+        mode_frame.pack(fill=tk.X, pady=(5, 15), padx=15)
         
-        ctk.CTkLabel(mode_frame, text="Режим:", font=ctk.CTkFont(size=12)).pack(side=tk.LEFT, padx=(0, 10))
+        ctk.CTkLabel(mode_frame, text="Режим:", font=ctk.CTkFont(size=13), text_color=self.colors["text_primary"]).pack(side=tk.LEFT, padx=(0, 15))
         
         self.fast_radio = ctk.CTkRadioButton(
             mode_frame,
             text="⚡ Быстрая (-c copy)",
             variable=self.cut_mode,
-            value="fast"
+            value="fast",
+            fg_color=self.colors["accent"],
+            hover_color=self.colors["accent_hover"],
+            text_color=self.colors["text_primary"],
+            font=ctk.CTkFont(size=12)
         )
         self.fast_radio.pack(side=tk.LEFT, padx=(0, 20))
         
@@ -421,74 +576,90 @@ class VideoClipCutter:
             mode_frame,
             text="🎯 Точная (перекодирование)",
             variable=self.cut_mode,
-            value="accurate"
+            value="accurate",
+            fg_color=self.colors["accent"],
+            hover_color=self.colors["accent_hover"],
+            text_color=self.colors["text_primary"],
+            font=ctk.CTkFont(size=12)
         )
         self.accurate_radio.pack(side=tk.LEFT)
         
         # Чекбокс вертикального формата
         self.crop_checkbox = ctk.CTkCheckBox(
             settings_frame,
-            text="✂️ Обрезать под вертикальный формат 9:16 (1080x1920)"
+            text="✂️ Обрезать под вертикальный формат 9:16 (1080x1920)",
+            fg_color=self.colors["accent"],
+            hover_color=self.colors["accent_hover"],
+            text_color=self.colors["text_primary"],
+            font=ctk.CTkFont(size=12)
         )
-        self.crop_checkbox.pack(anchor=tk.W, pady=(5, 10))
+        self.crop_checkbox.pack(anchor=tk.W, pady=(5, 15), padx=15)
         
         # Поле для таймкодов
-        timecode_frame = ctk.CTkFrame(scrollable_frame)
-        timecode_frame.pack(fill=tk.BOTH, expand=True, pady=(0, 10))
+        timecode_frame = ctk.CTkFrame(scrollable_frame, fg_color=self.colors["bg_card"])
+        timecode_frame.pack(fill=tk.BOTH, expand=True, pady=(0, 15))
         
-        ctk.CTkLabel(timecode_frame, text="Таймкоды:", font=ctk.CTkFont(size=14, weight="bold")).pack(anchor=tk.W, pady=(10, 5))
+        ctk.CTkLabel(timecode_frame, text="📝 Таймкоды:", font=ctk.CTkFont(size=14, weight="bold"), text_color=self.colors["text_primary"]).pack(anchor=tk.W, pady=(15, 10), padx=15)
         
         self.timecode_text = ctk.CTkTextbox(
             timecode_frame,
-            height=200,
-            font=ctk.CTkFont(family="Consolas", size=11)
+            height=220,
+            font=ctk.CTkFont(family="Consolas", size=11),
+            fg_color="#1a1a2e",
+            border_color=self.colors["accent"],
+            text_color=self.colors["text_primary"]
         )
-        self.timecode_text.pack(fill=tk.BOTH, expand=True)
+        self.timecode_text.pack(fill=tk.BOTH, expand=True, padx=15, pady=(0, 10))
         
         # Кнопка вставки из буфера обмена
         paste_btn_frame = ctk.CTkFrame(timecode_frame, fg_color="transparent")
-        paste_btn_frame.pack(fill=tk.X, pady=(5, 0))
+        paste_btn_frame.pack(fill=tk.X, pady=(5, 10), padx=15)
         
         ctk.CTkButton(
             paste_btn_frame,
             text="📋 Вставить таймкоды из буфера обмена",
             command=self.paste_timecodes_from_clipboard,
-            height=35,
+            height=40,
             fg_color="#2196F3",
-            hover_color="#1976D2"
+            hover_color="#1976D2",
+            font=ctk.CTkFont(size=12)
         ).pack(side=tk.LEFT)
         
         # Пример
         ctk.CTkLabel(
             timecode_frame,
             text="Пример: 00:01:40 - 00:02:40 | Интересный момент",
-            text_color="gray"
-        ).pack(anchor=tk.W, pady=(5, 0))
+            text_color=self.colors["text_secondary"],
+            font=ctk.CTkFont(size=11)
+        ).pack(anchor=tk.W, pady=(5, 15), padx=15)
         
         # Кнопка начала
         self.start_button = ctk.CTkButton(
             scrollable_frame,
             text="▶ НАЧАТЬ НАРЕЗКУ",
             command=self.start_cutting,
-            height=50,
-            font=ctk.CTkFont(size=16, weight="bold"),
-            fg_color="#4CAF50",
-            hover_color="#45a049"
+            height=55,
+            font=ctk.CTkFont(size=18, weight="bold"),
+            fg_color=self.colors["success"],
+            hover_color=self.colors["success_hover"]
         )
-        self.start_button.pack(fill=tk.X, pady=(10, 0))
+        self.start_button.pack(fill=tk.X, pady=(10, 15), padx=15)
         
         # Статус
-        status_frame = ctk.CTkFrame(scrollable_frame)
-        status_frame.pack(fill=tk.BOTH, expand=True, pady=(10, 0))
+        status_frame = ctk.CTkFrame(scrollable_frame, fg_color=self.colors["bg_card"])
+        status_frame.pack(fill=tk.BOTH, expand=True, pady=(0, 15))
         
-        ctk.CTkLabel(status_frame, text="Лог процесса:", font=ctk.CTkFont(size=14, weight="bold")).pack(anchor=tk.W, pady=(10, 5))
+        ctk.CTkLabel(status_frame, text="📊 Лог процесса:", font=ctk.CTkFont(size=14, weight="bold"), text_color=self.colors["text_primary"]).pack(anchor=tk.W, pady=(15, 10), padx=15)
         
         self.status_text = ctk.CTkTextbox(
             status_frame,
-            height=150,
-            font=ctk.CTkFont(family="Consolas", size=10)
+            height=170,
+            font=ctk.CTkFont(family="Consolas", size=10),
+            fg_color="#1a1a2e",
+            border_color=self.colors["accent"],
+            text_color="#00ff00"
         )
-        self.status_text.pack(fill=tk.BOTH, expand=True)
+        self.status_text.pack(fill=tk.BOTH, expand=True, padx=15, pady=(0, 15))
     
     def select_video_file(self):
         """Открывает диалог выбора видеофайла."""
